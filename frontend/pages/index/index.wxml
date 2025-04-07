@@ -1,0 +1,129 @@
+<view class="container">
+  <image class="bg-image" src="/images/bg.jpg" mode="aspectFill"></image>
+  
+  <view class="sound-toggle" bindtap="toggleSound">
+    <image class="sound-icon" src="{{soundEnabled ? '/images/sound-on.png' : '/images/sound-off.png'}}"></image>
+  </view>
+  
+  <view class="logo-container fade-in">
+    <image class="logo" src="/images/logo.png" mode="aspectFit"></image>
+    <view class="title">四川泸州大二</view>
+    <view class="subtitle">经典棋牌游戏</view>
+  </view>
+  
+  <view class="menu fade-in" wx:if="{{!inRoom}}">
+    <button class="menu-btn btn-primary" bindtap="createRoom">
+      <view class="btn-icon">🏠</view>
+      <view class="btn-text">创建房间</view>
+    </button>
+    <button class="menu-btn btn-secondary" bindtap="showJoinRoom">
+      <view class="btn-icon">🔍</view>
+      <view class="btn-text">加入房间</view>
+    </button>
+    <button class="menu-btn btn-primary" bindtap="quickMatch">
+      <view class="btn-icon">⚡</view>
+      <view class="btn-text">快速匹配</view>
+    </button>
+  </view>
+
+  <view class="join-room fade-in card-shadow" wx:if="{{showJoinInput}}">
+    <view class="section-title">加入房间</view>
+    <input class="room-input" type="text" placeholder="请输入房间号" bindinput="onRoomIdInput" placeholder-style="color: rgba(255,255,255,0.5)"/>
+    <view class="action-buttons">
+      <button class="btn-small btn-danger" bindtap="cancelJoin">取消</button>
+      <button class="btn-small btn-primary" bindtap="joinRoom">确认加入</button>
+    </view>
+  </view>
+
+  <scroll-view class="game-scroll" scroll-y="{{true}}" wx:if="{{inRoom}}">
+    <view class="game-room fade-in">
+      <view class="room-info card-shadow">
+        <view class="room-header">
+          <view class="room-title">房间信息</view>
+        </view>
+        <view class="room-detail">
+          <view class="room-id-container">
+            <text class="room-id-label">房间号:</text>
+            <text class="room-id-value">{{roomId}}</text>
+            <button class="copy-btn" bindtap="copyRoomId">{{copyTooltip}}</button>
+          </view>
+          <view class="room-status">
+            <text class="status-label">状态:</text>
+            <text class="status-value {{gameStarted ? 'status-playing' : 'status-waiting'}}">
+              {{gameStarted ? '游戏中' : '等待中'}}
+            </text>
+          </view>
+        </view>
+      </view>
+
+      <view class="game-table card-shadow">
+        <view class="players-container">
+          <view class="player {{player.position === currentPosition ? 'current-player' : ''}}" 
+                wx:for="{{players}}" 
+                wx:key="id" 
+                wx:for-item="player">
+            <view class="player-avatar">
+              <image class="avatar" src="{{player.avatarUrl || '/images/default-avatar.png'}}"></image>
+              <view class="player-position">P{{player.position + 1}}</view>
+            </view>
+            <view class="player-info">
+              <view class="player-name">{{player.name}}</view>
+              <view class="card-count">剩余: {{player.cardCount}}</view>
+              <view class="ready-status {{player.isReady ? 'ready' : ''}}" wx:if="{{!gameStarted}}">
+                {{player.isReady ? '已准备' : '未准备'}}
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <view class="last-played card-shadow" wx:if="{{gameStarted && lastPlayedCards.length > 0}}">
+          <view class="section-title">上家出牌</view>
+          <view class="cards-container">
+            <view class="card-item" wx:for="{{lastPlayedCards}}" wx:key="index">
+              <image class="card-image" src="/images/cards/{{item.suit}}_{{item.rank}}.png" mode="aspectFit"></image>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view class="my-cards-area card-shadow" wx:if="{{gameStarted}}" animation="{{isMyTurn ? animationData : ''}}">
+        <view class="section-title">我的牌</view>
+        <scroll-view scroll-x class="my-cards-scroll">
+          <view class="cards-container">
+            <view class="card-item {{item.selected ? 'selected' : ''}}" 
+                  wx:for="{{myCards}}" 
+                  wx:key="index"
+                  bindtap="selectCard"
+                  data-index="{{index}}">
+              <image class="card-image" src="/images/cards/{{item.suit}}_{{item.rank}}.png" mode="aspectFit"></image>
+            </view>
+          </view>
+        </scroll-view>
+
+        <view class="controls">
+          <button class="game-btn btn-danger" bindtap="pass" wx:if="{{isMyTurn}}">过牌</button>
+          <button class="game-btn btn-primary pulse" bindtap="playCards" wx:if="{{isMyTurn}}">出牌</button>
+        </view>
+      </view>
+      
+      <view class="bottom-space"></view>
+    </view>
+  </scroll-view>
+
+  <view class="ready-btn-container" wx:if="{{inRoom && !gameStarted && !isReady}}">
+    <button class="ready-btn" bindtap="ready">准备游戏</button>
+  </view>
+  
+  <view class="waiting-tip" wx:if="{{inRoom && !gameStarted && isReady}}">
+    <view class="loading-dots">
+      <view class="dot"></view>
+      <view class="dot"></view>
+      <view class="dot"></view>
+    </view>
+    <view class="waiting-text">等待玩家 {{readyCount}}/4</view>
+  </view>
+
+  <view class="floating-exit" wx:if="{{inRoom}}">
+    <button class="exit-btn" bindtap="leaveRoom">退出房间</button>
+  </view>
+</view> 

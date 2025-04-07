@@ -1,0 +1,125 @@
+/**app.wxss**/
+page {
+  background-color: #121f2f;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica,
+    Segoe UI, Arial, Roboto, 'PingFang SC', 'miui', 'Hiragino Sans GB', 'Microsoft Yahei',
+    sans-serif;
+  color: #fff;
+}
+
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: 0 30rpx;
+}
+
+button {
+  margin: 0;
+  padding: 0;
+  background: initial;
+}
+
+button:focus {
+  outline: 0;
+}
+
+button::after {
+  border: none;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #4caf50, #2e7d32);
+  color: #ffffff;
+  border-radius: 40rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  height: 88rpx;
+  line-height: 88rpx;
+  box-shadow: 0 8rpx 16rpx rgba(46, 125, 50, 0.3);
+  transition: all 0.3s;
+  border: none;
+}
+
+.btn-primary:active {
+  transform: translateY(3rpx);
+  box-shadow: 0 4rpx 8rpx rgba(46, 125, 50, 0.3);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, #ff9800, #f57c00);
+  color: #ffffff;
+  border-radius: 40rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  height: 88rpx;
+  line-height: 88rpx;
+  box-shadow: 0 8rpx 16rpx rgba(245, 124, 0, 0.3);
+  transition: all 0.3s;
+  border: none;
+}
+
+.btn-secondary:active {
+  transform: translateY(3rpx);
+  box-shadow: 0 4rpx 8rpx rgba(245, 124, 0, 0.3);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #f44336, #d32f2f);
+  color: #ffffff;
+  border-radius: 40rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  height: 88rpx;
+  line-height: 88rpx;
+  box-shadow: 0 8rpx 16rpx rgba(211, 47, 47, 0.3);
+  transition: all 0.3s;
+  border: none;
+}
+
+.btn-danger:active {
+  transform: translateY(3rpx);
+  box-shadow: 0 4rpx 8rpx rgba(211, 47, 47, 0.3);
+}
+
+.card-shadow {
+  background-color: rgba(255, 255, 255, 0.07);
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 10rpx 20rpx rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+} 

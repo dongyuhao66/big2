@@ -1,0 +1,111 @@
+<!-- 游戏牌桌页面 -->
+<view class="game-container">
+  <!-- 游戏信息栏 -->
+  <view class="game-header">
+    <view class="room-info">
+      <text class="room-id">房间号: {{roomId}}</text>
+      <text class="game-status">{{gameStatusText}}</text>
+    </view>
+    <view class="button-group">
+      <button class="exit-btn" bindtap="leaveRoom">退出房间</button>
+    </view>
+  </view>
+
+  <!-- 游戏牌桌 -->
+  <view class="game-table">
+    <!-- 中央出牌区 -->
+    <view class="play-area">
+      <view class="last-played" wx:if="{{lastPlayedCards.length > 0}}">
+        <block wx:for="{{lastPlayedCards}}" wx:key="index">
+          <view class="card {{item.suit}}" style="left: {{index * 30}}rpx;">
+            <text>{{item.rankDisplay}}</text>
+            <text class="suit-icon">{{item.suitIcon}}</text>
+          </view>
+        </block>
+      </view>
+      <view class="last-player" wx:if="{{lastPlayedByPosition >= 0}}">
+        <text>{{getPlayerNameByPosition(lastPlayedByPosition)}} 出牌</text>
+      </view>
+    </view>
+
+    <!-- 上家 -->
+    <view class="player top-player {{currentPlayerIndex === 2 ? 'active-player' : ''}}">
+      <view class="player-info">
+        <text class="player-name">{{getPlayerByPosition(2).name || '等待加入'}}</text>
+        <text class="card-count" wx:if="{{getPlayerByPosition(2)}}">剩余: {{getPlayerByPosition(2).cardCount}}张</text>
+      </view>
+      <view class="player-cards">
+        <block wx:for="{{13}}" wx:key="index">
+          <view class="card-back" wx:if="{{getPlayerByPosition(2) && getPlayerByPosition(2).cardCount > index}}"></view>
+        </block>
+      </view>
+    </view>
+
+    <!-- 左家 -->
+    <view class="player left-player {{currentPlayerIndex === 1 ? 'active-player' : ''}}">
+      <view class="player-info">
+        <text class="player-name">{{getPlayerByPosition(1).name || '等待加入'}}</text>
+        <text class="card-count" wx:if="{{getPlayerByPosition(1)}}">剩余: {{getPlayerByPosition(1).cardCount}}张</text>
+      </view>
+      <view class="player-cards horizontal">
+        <block wx:for="{{13}}" wx:key="index">
+          <view class="card-back horizontal" wx:if="{{getPlayerByPosition(1) && getPlayerByPosition(1).cardCount > index}}"></view>
+        </block>
+      </view>
+    </view>
+
+    <!-- 右家 -->
+    <view class="player right-player {{currentPlayerIndex === 3 ? 'active-player' : ''}}">
+      <view class="player-info">
+        <text class="player-name">{{getPlayerByPosition(3).name || '等待加入'}}</text>
+        <text class="card-count" wx:if="{{getPlayerByPosition(3)}}">剩余: {{getPlayerByPosition(3).cardCount}}张</text>
+      </view>
+      <view class="player-cards horizontal">
+        <block wx:for="{{13}}" wx:key="index">
+          <view class="card-back horizontal" wx:if="{{getPlayerByPosition(3) && getPlayerByPosition(3).cardCount > index}}"></view>
+        </block>
+      </view>
+    </view>
+
+    <!-- 自己 -->
+    <view class="player bottom-player {{currentPlayerIndex === myPosition ? 'active-player' : ''}}">
+      <view class="player-cards">
+        <block wx:for="{{myCards}}" wx:key="index">
+          <view class="card {{item.suit}} {{item.selected ? 'selected' : ''}}" 
+                bindtap="selectCard" 
+                data-index="{{index}}"
+                style="left: {{index * 40}}rpx; z-index: {{index}};">
+            <text>{{item.rankDisplay}}</text>
+            <text class="suit-icon">{{item.suitIcon}}</text>
+          </view>
+        </block>
+      </view>
+      <view class="player-info">
+        <text class="player-name">{{getPlayerByPosition(myPosition).name || '我'}}</text>
+        <text class="card-count">剩余: {{myCards.length}}张</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作区 -->
+  <view class="action-area">
+    <button class="play-btn" bindtap="playCards" disabled="{{!isMyTurn || selectedCards.length === 0}}">出牌</button>
+    <button class="pass-btn" bindtap="pass" disabled="{{!isMyTurn || lastPlayedByPosition === -1}}">过牌</button>
+  </view>
+
+  <!-- 游戏结果弹窗 -->
+  <view class="game-result" wx:if="{{status === 'FINISHED'}}">
+    <view class="result-content">
+      <text class="result-title">游戏结束</text>
+      <view class="result-players">
+        <block wx:for="{{players}}" wx:key="index">
+          <view class="result-player">
+            <text>{{item.name}}</text>
+            <text>{{item.cardCount === 0 ? '赢家' : '剩余' + item.cardCount + '张牌'}}</text>
+          </view>
+        </block>
+      </view>
+      <button class="new-game-btn" bindtap="readyForNewGame">准备新游戏</button>
+    </view>
+  </view>
+</view> 
